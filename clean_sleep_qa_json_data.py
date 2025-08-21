@@ -60,6 +60,33 @@ def clean_tongue_pulse(text):
     
     return text
 
+def clean_herbs(output_text):
+    """清理中药处方，排序并去除重复的中草药"""
+    if not output_text:
+        return output_text
+    
+    # 匹配中药处方格式
+    herb_pattern = r'中药处方：(.*?)[。.]'
+    match = re.search(herb_pattern, output_text)
+    
+    if match:
+        herbs_str = match.group(1)
+        # 分割中草药
+        herbs = re.split(r'[、,，]', herbs_str)
+        # 去除空白字符并过滤空字符串
+        herbs = [herb.strip() for herb in herbs if herb.strip()]
+        # 去重
+        unique_herbs = list(set(herbs))
+        # unique_herbs = sorted(unique_herbs)
+        
+        # 重新组合
+        cleaned_herbs = '、'.join(unique_herbs)
+        
+        # 替换原文
+        output_text = re.sub(herb_pattern, f'中药处方：{cleaned_herbs}。', output_text)
+    
+    return output_text
+
 def clean_input_text(input_text):
     """清理输入文本"""
     # 先清理生命体征
@@ -93,17 +120,21 @@ def clean_sleep_qa_data(input_file, output_file):
         original_input = item['input']
         cleaned_input = clean_input_text(original_input)
         
+        # 清理output字段中的中草药
+        original_output = item['output']
+        cleaned_output = clean_herbs(original_output)
+        
         # 创建清理后的数据项
         cleaned_item = {
             'instruction': item['instruction'],
             'input': cleaned_input,
-            'output': item['output']
+            'output': cleaned_output
         }
         
         cleaned_data.append(cleaned_item)
         
         # 统计清理情况
-        if original_input != cleaned_input:
+        if original_input != cleaned_input or original_output != cleaned_output:
             cleaned_count += 1
     
     # 保存清理后的数据
@@ -119,12 +150,22 @@ def clean_sleep_qa_data(input_file, output_file):
     print("\n=== 清理示例 ===")
     example_count = 0
     for i, item in enumerate(data):
-        original = item['input']
-        cleaned = cleaned_data[i]['input']
-        if original != cleaned and example_count < 3:
+        original_input = item['input']
+        cleaned_input = cleaned_data[i]['input']
+        original_output = item['output']
+        cleaned_output = cleaned_data[i]['output']
+        
+        input_changed = original_input != cleaned_input
+        output_changed = original_output != cleaned_output
+        
+        if (input_changed or output_changed) and example_count < 3:
             print(f"\n示例 {example_count + 1}:")
-            print(f"原始: {original}")
-            print(f"清理后: {cleaned}")
+            # if input_changed:
+            #     print(f"输入原始: {original_input}")
+            #     print(f"输入清理后: {cleaned_input}")
+            if output_changed:
+                print(f"输出原始: {original_output}")
+                print(f"输出清理后: {cleaned_output}")
             example_count += 1
 
 if __name__ == "__main__":

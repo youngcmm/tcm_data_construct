@@ -35,7 +35,7 @@ def extract_herbs(text, substitution_dict=None):
                 clean_herb = pattern.sub(replacement, clean_herb)
         else:
             # 药物名称标准化，通过herb_uniq.py得到标准化处理映射关系
-            
+            clean_herb = re.sub(r'茯神', '茯苓', clean_herb)
             clean_herb = re.sub(r'炙杷叶', '枇杷叶', clean_herb)
             clean_herb = re.sub(r'桔络', '橘络', clean_herb)
             clean_herb = re.sub(r'桔核', '橘核', clean_herb)           
@@ -288,6 +288,7 @@ def create_substitution_dict():
     """创建预编译的替换字典以提高性能"""
     # 定义替换规则
     substitution_rules = {
+        r'茯神':'茯苓',
         r'桔核':'橘核',
         r'叶下':'叶下珠',
         r'枸杞根':'地骨皮',
