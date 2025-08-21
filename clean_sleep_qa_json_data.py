@@ -128,7 +128,7 @@ def clean_sleep_qa_data(input_file, output_file):
             example_count += 1
 
 if __name__ == "__main__":
-    input_file = '/Users/ycm/Library/Mobile Documents/com~apple~CloudDocs/data/睡眠病历问答对.json'
-    output_file = '睡眠病历问答对_清理四诊和体征数据信息.json'
+    input_file = '/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa.json'
+    output_file = '/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa_clean.json'
     
     clean_sleep_qa_data(input_file, output_file)

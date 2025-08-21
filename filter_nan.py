@@ -21,6 +21,14 @@ def has_nan_fields(input_text):
     
     return False
 
+def chinese_char_count(text):
+    """计算文本中中文字符的数量"""
+    if not text:
+        return 0
+    # 使用正则表达式匹配中文字符
+    chinese_chars = re.findall(r'[\u4e00-\u9fff]', text)
+    return len(chinese_chars)
+
 def filter_nan_samples(input_file, output_file):
     """过滤包含nan字段的样本"""
     with open(input_file, 'r', encoding='utf-8') as f:
@@ -32,29 +40,50 @@ def filter_nan_samples(input_file, output_file):
     # 过滤掉包含nan的样本
     filtered_data = []
     removed_count = 0
+    nan_removed = 0
+    input_length_removed = 0
+    output_length_removed = 0
     
     for item in data:
         input_text = item.get('input', '')
+        output_text = item.get('output', '')
         
+        # 检查是否包含nan字段
         if has_nan_fields(input_text):
+            nan_removed += 1
             removed_count += 1
-        else:
-            filtered_data.append(item)
+            continue
+        
+        # 检查input长度是否符合要求(41-230个中文字符)
+        input_chinese_count = chinese_char_count(input_text)
+        if input_chinese_count < 41 or input_chinese_count > 230:
+            input_length_removed += 1
+            removed_count += 1
+            continue
+        
+        # 检查output长度是否符合要求(至少14个中文字符)
+        output_chinese_count = chinese_char_count(output_text)
+        if output_chinese_count < 14:
+            output_length_removed += 1
+            removed_count += 1
+            continue
+            
+        filtered_data.append(item)
     
     # 保存过滤后的数据
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(filtered_data, f, ensure_ascii=False, indent=2)
     
     print(f"移除的样本数: {removed_count}")
+    print(f"  - nan字段移除: {nan_removed}")
+    print(f"  - input长度不符合要求移除: {input_length_removed}")
+    print(f"  - output长度不符合要求移除: {output_length_removed}")
     print(f"保留的样本数: {len(filtered_data)}")
     print(f"过滤后数据已保存至: {output_file}")
     print()
 
 if __name__ == "__main__":
-    # 处理训练集
-    filter_nan_samples('sleepy_qa_train_filtered_bracket_content_with_system_prompt.json', 'sleepy_qa_train_filtered_bracket_content_with_system_prompt_nan.json')
     
-    # 处理测试集
-    filter_nan_samples('sleepy_qa_test_filtered_bracket_content.json', 'sleepy_qa_test_filtered_bracket_content_nan.json')
+    filter_nan_samples('/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa_clean.json', '/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa_clean_nan.json')
     
     print("所有文件处理完成！")

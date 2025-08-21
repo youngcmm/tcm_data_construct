@@ -35,6 +35,12 @@ def extract_herbs(text, substitution_dict=None):
                 clean_herb = pattern.sub(replacement, clean_herb)
         else:
             # 药物名称标准化，通过herb_uniq.py得到标准化处理映射关系
+            
+            clean_herb = re.sub(r'炙杷叶', '枇杷叶', clean_herb)
+            clean_herb = re.sub(r'桔络', '橘络', clean_herb)
+            clean_herb = re.sub(r'桔核', '橘核', clean_herb)           
+            clean_herb = re.sub(r'枸杞根', '地骨皮', clean_herb)
+            clean_herb = re.sub(r'叶下', '叶下珠', clean_herb)
             clean_herb = re.sub(r'三七片', '三七', clean_herb)
             clean_herb = re.sub(r'三七粉', '三七', clean_herb)
             clean_herb = re.sub(r'熟三七粉', '三七', clean_herb)
@@ -282,6 +288,9 @@ def create_substitution_dict():
     """创建预编译的替换字典以提高性能"""
     # 定义替换规则
     substitution_rules = {
+        r'桔核':'橘核',
+        r'叶下':'叶下珠',
+        r'枸杞根':'地骨皮',
         r'三七片': '三七',
         r'三七粉': '三七',
         r'熟三七粉': '三七',
@@ -630,8 +639,8 @@ def process_prescription_data(input_file, output_file):
 
 if __name__ == "__main__":
     # 使用示例
-    input_file = '20250718-2-失眠病历数据-标准化药材名称.csv'
-    output_file = '20250718-2-失眠病历数据-标准化药材名称-filtered-580.csv'
+    input_file = '/Volumes/KINGSTON/code/tcm_data_construct/data/20250718-2-失眠病历数据-仅含有睡眠障碍行的数据.csv'
+    output_file = '/Volumes/KINGSTON/code/tcm_data_construct/data/20250718-2-失眠病历数据-仅含有睡眠障碍行的数据.csv'
     
     # 处理完整数据
     df = process_prescription_data(input_file, output_file)
