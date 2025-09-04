@@ -2,21 +2,21 @@
 import json
 import random
 
-with open('/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa_clean_nan.json', 'r') as f:
+with open('/Volumes/KINGSTON/code/tcm_data_construct/data/processed_data.json', 'r') as f:
     data = json.load(f)
 
 random.shuffle(data)
 
 # 分割数据
-test_data = data[:2000]
-train_data = data[2000:]
+test_data = data[:100]
+train_data = data[100:]
 
 # 保存测试集
-with open('data/sleepy_qa_test.json', 'w') as f:
+with open('data/processed_data_test.json', 'w') as f:
     json.dump(test_data, f, ensure_ascii=False, indent=4)
 
 # 保存训练集
-with open('data/sleepy_qa_train.json', 'w') as f:
+with open('data/processed_data_train.json', 'w') as f:
     json.dump(train_data, f, ensure_ascii=False, indent=4)
 
 print(f"测试集样本数: {len(test_data)}")
