@@ -2,7 +2,7 @@
 import json
 import random
 
-with open('/Volumes/KINGSTON/code/tcm_data_construct/data/processed_data.json', 'r') as f:
+with open('/media/data4/yangcm/tcm_data_construct/data/concatenated_tcm_data_clean.json', 'r') as f:
     data = json.load(f)
 
 random.shuffle(data)

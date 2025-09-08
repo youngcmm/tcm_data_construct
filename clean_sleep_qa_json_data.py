@@ -169,7 +169,7 @@ def clean_sleep_qa_data(input_file, output_file):
             example_count += 1
 
 if __name__ == "__main__":
-    input_file = '/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa.json'
-    output_file = '/Volumes/KINGSTON/code/tcm_data_construct/data/sleep_qa_clean.json'
+    input_file = '/media/data4/yangcm/tcm_data_construct/data/output_0.json'
+    output_file = '/media/data4/yangcm/tcm_data_construct/data/output_0_clean.json'
     
     clean_sleep_qa_data(input_file, output_file)
