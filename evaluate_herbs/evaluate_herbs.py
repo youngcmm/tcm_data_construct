@@ -48,7 +48,7 @@ def evaluate_herbs(pred: str, grt: str, func_list: dict, N: int, eval_type: str,
             pr_match_num.append(len(count_overlap(pr_func, gt_func)))
         sub_match.append(pr_match_num)
     sub_match = np.array(sub_match)                                 # 行：pred 的药物  列：gt 的药物和 pred 匹配的功效数量
-    
+    # print(sub_match)
     while (sub_match.max() >= N):
         max_idx = np.where(sub_match == sub_match.max())
         matched += min(len(set(max_idx[0])), len(set(max_idx[1])))  # 只统计功效重叠数符合要求，并且匹配程度最优的药，并且同行同列进行去重
@@ -57,7 +57,7 @@ def evaluate_herbs(pred: str, grt: str, func_list: dict, N: int, eval_type: str,
                 if sub_match[i,j] == -1: continue                   # 防止药品在没有被匹配的情况下被置为 -1，失去后续匹配的资格
                 sub_match[i,:] = -1
                 sub_match[:,j] = -1                                 # 在统计完成后，将同行同列全部置为 -1，避免重复
-    
+    # print(total_len)
     if eval_type == 'iou':
         return matched / total_len
     elif eval_type == 'f1':
@@ -72,7 +72,9 @@ def evaluate_herbs(pred: str, grt: str, func_list: dict, N: int, eval_type: str,
 # 以下是一个示例：
 pred = "山药，甘草，茯苓，川芎，山萸肉，酸枣仁，附子，泽泻，地黄，牡丹皮，知母，桂枝"
 grt = "豆豉，陈皮，桔梗，知母，远志，甘草，栀子，百合，地黄，合欢皮，茯苓，石菖蒲，竹茹"
-with open('./herbs_func/herb2func.json', 'r', encoding='utf-8') as f:
+with open('./herb2func.json', 'r', encoding='utf-8') as f:
     func_list = json.load(f)
-precision, recall, f1 = evaluate_herbs(pred, grt, func_list, 2, 'f1', True)
-print('precision: ', precision, 'recall: ', recall, 'f1: ', f1)
+# precision, recall, f1 = evaluate_herbs(pred, grt, func_list, 2, 'f1', strict=False)
+iou = evaluate_herbs(pred, grt, func_list, 2, 'iou', strict=False)
+# print('precision: ', precision, 'recall: ', recall, 'f1: ', f1)
+print('iou: ', iou)
