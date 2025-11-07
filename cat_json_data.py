@@ -4,7 +4,7 @@ from extract_herbs import create_substitution_dict, extract_herbs
 
 # 读取data/output_0.json文件
 def read_data():
-    with open('/media/data4/yangcm/tcm_data_construct/data/concatenated_tcm_data.json', 'r', encoding='utf-8') as f:
+    with open('data/data_cleaned_v4.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
     return data
 
@@ -66,7 +66,7 @@ def main():
             result.append(new_item)
     
     # 保存结果
-    with open('/media/data4/yangcm/tcm_data_construct/data/concatenated_tcm_data_clean.json', 'w', encoding='utf-8') as f:
+    with open('/media/data4/yangcm/tcm_data_construct/data/concatenated_tcm_data_clean_v1.json', 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     
     print(f"处理完成，共处理 {len(result)} 条有效记录")

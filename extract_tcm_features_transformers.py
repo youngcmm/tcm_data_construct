@@ -50,7 +50,7 @@ def extract_tcm_features_with_llm(case_data, model, tokenizer):
 }}
 
 请确保：
-1. key_symptoms只包含具体的症状，如"失眠"、"口干"等
+1. key_symptoms只包含现病史以及舌苔脉象中具体的症状，如"失眠"、"口干、苔黄、纳差"等
 2. tongue_condition是舌象描述，如"舌淡苔薄白"
 3. pulse_condition是脉象描述，如"脉弦"
 4. key_herbs是药材名到其作用的映射，只包含标准处方药材名称中的药材
@@ -117,7 +117,7 @@ def load_checkpoint(output_file):
             return []
     return []
 
-def process_tcm_data(input_file, output_file, batch_size=4, resume_from=0, model_path="/media/data2/yangcm/models/DeepSeek-R1-Distill-Qwen-32B"):
+def process_tcm_data(input_file, output_file, batch_size=4, resume_from=0, model_path="/media/data3/huangjunj/pretrained_models/FreedomIntelligence/ShizhenGPT-32B-LLM"):
     """
     Process TCM data file and extract features using LLM
     """
@@ -178,8 +178,8 @@ def save_results(results, output_file):
         json.dump(results, f, ensure_ascii=False, indent=2)
 
 def main():
-    input_file = "/media/data4/yangcm/tcm_data_construct/data/concatenated_tcm_data.json"
-    output_file = "data/concatenated_tcm_data_extract_features.json"
+    input_file = "data/data_cleaned_v4.json"
+    output_file = "data/data_cleaned_v4_extract_features.json"
     
     # 确保data目录存在
     os.makedirs(os.path.dirname(output_file), exist_ok=True)

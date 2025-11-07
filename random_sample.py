@@ -2,14 +2,14 @@
 import json
 import random
 
-with open('/media/data4/yangcm/tcm_data_construct/data/concatenated_tcm_data_clean.json', 'r') as f:
+with open('data/concatenated_tcm_data_clean_v1.json', 'r') as f:
     data = json.load(f)
 
 random.shuffle(data)
 
 # 分割数据
-test_data = data[:100]
-train_data = data[100:]
+test_data = data[:10000]
+train_data = data[10000:]
 
 # 保存测试集
 with open('data/processed_data_test.json', 'w') as f:
